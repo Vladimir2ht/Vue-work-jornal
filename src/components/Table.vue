@@ -2,8 +2,8 @@
   
 <v-data-table
     :headers="headers"
-    :items="desserts"
-    class="elevation-1"
+    :items="profiles"
+    class="elevation"
     hide-default-footer
     hide-default-header
     disable-sort
@@ -29,7 +29,11 @@
               {{headers[4].text}}
             </th>
             <th>
-              <Form>
+              <Form 
+                :ressived_profile="profile_in_work"
+                :number_of_workers="profiles.length"
+                @Chenge_profile="Chenge_profile"
+              >
                 Добавить сотрудника
               </Form>
             </th>
@@ -39,16 +43,26 @@
 
     <template v-slot:item="row">
       <tr>
-        <td>{{row.item.number}}</td>
-        <td>{{row.item.name}}</td>
-        <td>{{row.item.family}}</td>
-        <td>{{row.item.father}}</td>
-        <td>{{row.item.work}}</td>
+        <td>{{row.item[0] + 1}}</td>
+        <td>{{row.item[1]}}</td>
+        <td>{{row.item[2]}}</td>
+        <td>{{row.item[3]}}</td>
+        <td>{{row.item[4]}}</td>
         <td>
-          <v-btn class="mx-2" rounded dark small color="blue" @click="ChangeWorker(row.item)">
+          <v-btn 
+            class="mx-2" 
+            rounded dark small
+            color="blue"
+            @click="Chuse_chenging_profile(row.item[0])"
+          >
             Обновить
           </v-btn>
-          <v-btn class="mx-2" rounded dark small color="red" @click="DeleteWorker(row.item)">
+          <v-btn
+            class="mx-2"
+            rounded dark small
+            color="red"
+            @click="Delete_profile(row.item[0])"
+          >
             Удалить
           </v-btn>
         </td>
@@ -71,40 +85,49 @@ import Form from './Form';
     
     data: () => ({
       headers: [
-          {
-            text: '№', value: 'number',
-            align: 'start',
-            sortable: false,
-          },
-          { text: 'Имя', value: 'name', },
-          { text: 'Фамилия', value: 'favily' },
-          { text: 'Отчество', value: 'father' },
-          { text: 'Должность', value: 'work' },
-          { value: 'button' },
-        ],
-        desserts: [
-          {
-            number: 0,
-            name: 'Frozen',
-            family: 'Mohov',
-            father: 'Rexov',
-            work: 'Builder',
-          },
-          {
-            number: 1,
-            name: 'Froze',
-            family: 'Moho',
-            father: 'Rexo',
-            work: 'Builde',
-          },
-          {
-            number: 2,
-            name: 'Froz',
-            family: 'Moh',
-            father: 'Rex',
-            work: 'Build',
-          },
-        ],
+        { text: '№', value: 'number', },
+        { text: 'Имя', value: 'name', },
+        { text: 'Фамилия', value: 'family' },
+        { text: 'Отчество', value: 'father' },
+        { text: 'Должность', value: 'work' },
+        { value: 'button' },
+      ],
+
+      profile_in_work: NaN,
+      
+      profiles: JSON.parse(localStorage.getItem("workers")),
+      
+      Save_profiles: (profiles) => {
+        localStorage.setItem("workers", JSON.stringify(profiles));  
+      },
     }),
+
+    methods: {
+      Chuse_chenging_profile(index) {
+        this.profile_in_work = index;
+			},
+			Chenge_profile(content) {
+        this.profiles[content[0]] = content;
+        // this.profiles в data не виден, по этому
+        // не получилось внести следующую строку в this.Save_profiles().
+        this.profiles = [...this.profiles];
+        this.Save_profiles(this.profiles);
+			},
+			Delete_profile(index) {
+        if (confirm(`Вы действительно хотите удалить профиль № ${index + 1} ?`)) {
+          this.profiles.splice(index, 1);
+          this.profiles.map((profile, number) => profile[0] = number);
+          this.profiles = [...this.profiles];
+          this.Save_profiles(this.profiles);
+        }
+			},
+		}
   }
 </script>
+
+<style>
+  .elevation {
+    min-width: 660px;
+  }
+  /* Проблемы с адаптивностью остались */
+</style>

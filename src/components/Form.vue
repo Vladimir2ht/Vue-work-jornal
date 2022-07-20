@@ -11,6 +11,7 @@
 					rounded
 					v-bind="attrs"
 					v-on="on"
+					@click=" is_create = true"
 				>
 					Добавить сотрудника
 				</v-btn>
@@ -20,7 +21,7 @@
 				<v-card-title>
 					<span class="text-h5">Профиль сотрудника</span>
 				</v-card-title>
-				<v-card-text>
+				<v-form ref="form" lazy-validation>
 					<v-container>
 						<v-row>
 							<v-col
@@ -29,6 +30,7 @@
 								md="4"
 							>
 								<v-text-field
+									:rules="name_rules"
 									label="Имя"
 									required
 								></v-text-field>
@@ -39,6 +41,7 @@
 								md="4"
 							>
 								<v-text-field
+									:rules="name_rules"
 									label="Отчество"
 									required
 								></v-text-field>
@@ -49,6 +52,7 @@
 								md="4"
 							>
 								<v-text-field
+									:rules="name_rules"
 									label="Фамилия"
 									required
 								></v-text-field>
@@ -59,6 +63,7 @@
 								md="4"
 							>
 								<v-text-field
+									:rules="number_text_rules"
 									label="Должность"
 									required
 								></v-text-field>
@@ -69,6 +74,7 @@
 								md="4"
 							>
 								<v-text-field
+									:rules="number_rules"
 									label="Оклад"
 									required
 								></v-text-field>
@@ -101,7 +107,6 @@
 										v-model="date"
 										@input="menu2 = false"
 										show-adjacent-months
-										required
 									></v-date-picker>
 								</v-menu>
 							</v-col>
@@ -112,6 +117,7 @@
 							>
 								<v-select
 									:items="['0.5', 'полная']"
+									:rules="[v => !!v || 'Укажите ставку']"
 									label="Ставка"
 									required
 								></v-select>
@@ -126,7 +132,6 @@
 							</v-col>
 						</v-row>
 					</v-container>
-				</v-card-text>
 				<v-card-actions>
 					<v-spacer></v-spacer>
 					<v-btn
@@ -139,11 +144,13 @@
 					<v-btn
 						color="blue darken-1"
 						text
-						@click="dialog = false"
+						type="submit"
+						@click="Save_profile"
 					>
 						Сохранить
 					</v-btn>
 				</v-card-actions>
+				</v-form>
 			</v-card>
 		</v-dialog>
 
@@ -153,10 +160,59 @@
 	export default {
 		name: 'MainForm',
 
+		props: {
+			ressived_profile: {
+				type: Number,
+				default() {return NaN}
+			},
+			number_of_workers: {
+				type: Number,
+				default() {return 0}
+			},
+		},
+		watch: { 
+			// eslint-disable-next-line
+			ressived_profile: function(newVal, oldVal) { 
+				this.dialog = true;
+			}
+		},
 		data: () => ({
 			dialog: false,
 			date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
       menu2: false,
+			is_create: false,
+
+			name_rules: [
+				v => !!v || 'Введите данные',
+				v => /^[A-ZА-ЯЁ][A-Za-z А-Яа-я-_ёЁ]*$/.test(v) || 'Некорректный ввод',
+			],
+			number_text_rules: [
+				v => !!v || 'Укажите должность',
+        v => /^[\w А-Яа-я-_ёЁ.,:]+$/.test(v) || 'Некорректный ввод',
+      ],
+			number_rules: [
+				v => !!v || 'Укажите зарплату',
+				v => /^[\d.,]+$/.test(v) || 'Введите число',
+				v => /^[1-9]\d+([,.]\d\d)?$/.test(v) || 'Некорректное число',
+			],
 		}),
+		methods: {
+			Save_profile(event) {
+				event.preventDefault();
+
+				if (this.$refs.form.validate()) {
+					
+					this.$emit( 'Chenge_profile',	[
+						(this.is_create) ? this._props.number_of_workers : this._props.ressived_profile,
+						...this.$refs.form.inputs.map(input => input._data.lazyValue)
+					]);
+
+					this.is_create = false;
+					this.dialog = false;
+					this.$refs.form.reset()
+				} 
+				
+			}
+		}
 	}
 </script>
