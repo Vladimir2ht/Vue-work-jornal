@@ -14,19 +14,19 @@
         <thead>
           <tr>
             <th>
-              {{headers[0].text}}
+              {{headers[0]}}
             </th>
             <th>
-              {{headers[1].text}}
+              {{headers[1]}}
             </th>
             <th>
-              {{headers[2].text}}
+              {{headers[2]}}
             </th>
             <th>
-              {{headers[3].text}}
+              {{headers[3]}}
             </th>
             <th>
-              {{headers[4].text}}
+              {{headers[4]}}
             </th>
             <th>
               <Form 
@@ -49,9 +49,12 @@
         <td>{{row.item[3]}}</td>
         <td>{{row.item[4]}}</td>
         <td>
-          <!-- <v-icon color="blue" @click="Look_card(row.item[0])">
-            mdi-clipboard-list-outline
-          </v-icon> -->
+          <router-link 
+            :to="{ name: 'person', query: {prson_number: row.item[0]} }" target="_blank">
+            <v-icon color="blue">
+              mdi-clipboard-list-outline
+            </v-icon>
+          </router-link>
           <v-btn 
             class="mx-2" 
             rounded dark small
@@ -88,12 +91,11 @@ import Form from './Form';
     
     data: () => ({
       headers: [
-        { text: '№', value: 'number', },
-        { text: 'Имя', value: 'name', },
-        { text: 'Фамилия', value: 'family' },
-        { text: 'Отчество', value: 'father' },
-        { text: 'Должность', value: 'work' },
-        { value: 'button' },
+        '№',
+        'Имя',
+        'Фамилия',
+        'Отчество',
+        'Должность',
       ],
 
       profile_in_work: NaN,
@@ -109,9 +111,6 @@ import Form from './Form';
       Chuse_chenging_profile(index) {
         this.profile_in_work = index;
 			},
-      // Look_card(index) {
-      //   this.$router.push('/person')
-			// },
 			Chenge_profile(content) {
         this.profiles[content[0]] = content;
         // this.profiles в data не виден, по этому
@@ -134,6 +133,9 @@ import Form from './Form';
 <style>
   .elevation, tr {
     min-width: 660px;
+  }
+  a[target="_blank"] {
+    text-decoration-line: none;
   }
   /* Проблемы с адаптивностью остались */
 </style>

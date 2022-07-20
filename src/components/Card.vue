@@ -1,39 +1,20 @@
 <template>
-  <v-card
+  <v-card color="blue"
     max-width="660"
     class="mx-auto"
   >
-	<!-- {{ card_number }} -->
-<!-- 
-    <v-list three-line>
-      <template v-for="(item, index) in items">
-        <v-subheader
-          v-if="item.header"
-          :key="item.header"
-          v-text="item.header"
-        ></v-subheader> 
-
-        <v-divider
-          v-else-if="item.divider"
-          :key="index"
-          :inset="item.inset"
-        ></v-divider>
+	  <v-card-title >Личное дело</v-card-title> 
+    <v-list >
+      <template v-for="(item) in content">
 
         <v-list-item
-          v-else
-          :key="item.title"
+          :key="item[0]"
         >
-          <v-list-item-avatar>
-            <v-img :src="item.avatar"></v-img>
-          </v-list-item-avatar>
-
-          <v-list-item-content>
-            <v-list-item-title v-html="item.title"></v-list-item-title>
-            <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-          </v-list-item-content>
+          <v-list-item-title v-html="item[0]"></v-list-item-title>
+          <v-list-item-subtitle v-html="item[1]"></v-list-item-subtitle>
         </v-list-item>
       </template>
-    </v-list>-->
+    </v-list>
   </v-card>
 
 </template>
@@ -42,42 +23,35 @@
 
   export default {
     name: 'MainCard',
-   
-    data: () => ({
+    
+		data: () => ({
       headers: [
-        { text: '№', value: 'number', },
-        { text: 'Имя', value: 'name', },
-        { text: 'Фамилия', value: 'family' },
-        { text: 'Отчество', value: 'father' },
-        { text: 'Должность', value: 'work' },
-        { value: 'button' },
+				'№',
+        'Имя',
+        'Фамилия',
+        'Отчество',
+        'Должность',
+        'Оклад',
+      	'Поступил(а) на работу',
+	      'Ставка',
+  	    'Трудовая книжка',
       ],
-
-      profile_in_work: NaN,
-      
-      profiles: console.log(JSON.parse(localStorage.getItem("workers"))) ,
-      
     }),
 
-    methods: {
-      Chuse_chenging_profile(index) {
-        this.profile_in_work = index;
-			},
-			Chenge_profile(content) {
-        this.profiles[content[0]] = content;
-        // this.profiles в data не виден, по этому
-        // не получилось внести следующую строку в this.Save_profiles().
-        this.profiles = [...this.profiles];
-        this.Save_profiles(this.profiles);
-			},
-			Delete_profile(index) {
-        if (confirm(`Вы действительно хотите удалить профиль № ${index + 1} ?`)) {
-          this.profiles.splice(index, 1);
-          this.profiles.map((profile, number) => profile[0] = number);
-          this.profiles = [...this.profiles];
-          this.Save_profiles(this.profiles);
-        }
-			},
-		}
+		computed: {
+    
+			content: function () {
+				let from_hold = JSON.parse(localStorage.getItem("workers"));
+				from_hold = from_hold[this.$route.query.prson_number];
+				from_hold = this.headers.map((el, ind) => [el, from_hold[ind]]);
+				console.log(from_hold);
+	      return from_hold
+  	  }
+  	},
   }
 </script>
+<style>
+.v-card__title {
+	color: white;
+}
+</style>
