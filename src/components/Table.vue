@@ -49,13 +49,16 @@
         <td>{{row.item[3]}}</td>
         <td>{{row.item[4]}}</td>
         <td>
+          <!-- <v-icon color="blue" @click="Look_card(row.item[0])">
+            mdi-clipboard-list-outline
+          </v-icon> -->
           <v-btn 
             class="mx-2" 
             rounded dark small
             color="blue"
             @click="Chuse_chenging_profile(row.item[0])"
           >
-            Обновить
+            Изменить
           </v-btn>
           <v-btn
             class="mx-2"
@@ -106,6 +109,9 @@ import Form from './Form';
       Chuse_chenging_profile(index) {
         this.profile_in_work = index;
 			},
+      // Look_card(index) {
+      //   this.$router.push('/person')
+			// },
 			Chenge_profile(content) {
         this.profiles[content[0]] = content;
         // this.profiles в data не виден, по этому
@@ -126,7 +132,7 @@ import Form from './Form';
 </script>
 
 <style>
-  .elevation {
+  .elevation, tr {
     min-width: 660px;
   }
   /* Проблемы с адаптивностью остались */

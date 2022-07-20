@@ -2,7 +2,7 @@
   <v-app>
     <v-main class="d-flex justify-center">
     
-      <Table/>
+      <router-view />
     
     </v-main>
   </v-app>
@@ -19,7 +19,7 @@ export default {
   },
 
   data: () => ({
-    //
+
   }),
 };
 </script>
