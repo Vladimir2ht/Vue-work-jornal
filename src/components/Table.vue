@@ -3,7 +3,6 @@
 <v-data-table
     :headers="headers"
     :items="profiles"
-    class="elevation"
     hide-default-footer
     hide-default-header
     disable-sort
@@ -28,7 +27,7 @@
             <th>
               {{headers[4]}}
             </th>
-            <th>
+            <th class="td-right">
               <Form 
                 :ressived_profile="profile_in_work"
                 :number_of_workers="profiles.length"
@@ -48,7 +47,7 @@
         <td>{{row.item[2]}}</td>
         <td>{{row.item[3]}}</td>
         <td>{{row.item[4]}}</td>
-        <td>
+        <td class="td-right">
           <router-link 
             :to="{ name: 'person', query: {prson_number: row.item[0]} }" target="_blank">
             <v-icon color="blue">
@@ -131,8 +130,29 @@ import Form from './Form';
 </script>
 
 <style>
-  .elevation, tr {
-    min-width: 660px;
+  .v-data-table {
+    margin: 5% 5% 0 5%;
+    min-width: 693px;
+  }
+  .td-right {
+    /* text-align: right; */
+    display: flex;
+    justify-content: center;
+  }
+  th.td-right button {
+    position: relative; 
+    top: 5px;
+  }
+  .td-right button {
+    position: relative; 
+    top: 10px;
+  }
+  .td-right a {
+    position: relative; 
+    top: 13px;
+  }
+  tbody {
+    min-width: 693px;
   }
   a[target="_blank"] {
     text-decoration-line: none;

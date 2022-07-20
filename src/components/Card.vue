@@ -43,15 +43,30 @@
 			content: function () {
 				let from_hold = JSON.parse(localStorage.getItem("workers"));
 				from_hold = from_hold[this.$route.query.prson_number];
+				from_hold[8] = (from_hold[8]) ? 'сдана' : 'не сдана';
 				from_hold = this.headers.map((el, ind) => [el, from_hold[ind]]);
-				console.log(from_hold);
 	      return from_hold
   	  }
   	},
   }
 </script>
+
 <style>
-.v-card__title {
-	color: white;
+
+.v-card {
+	margin-top: 5%;
 }
+.v-list {
+	padding: 0 0;
+}
+.v-list-item {
+	border: solid 2px lightgray;
+}
+	.v-card__title {
+		/* color: white; */
+}
+#app .v-list-item__subtitle {
+	color: black;
+}
+
 </style>

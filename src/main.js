@@ -11,12 +11,7 @@ const routes = [
   { path: '/', component: Table},
   { name: 'person',
     path: '/person',
-    // href: '_blank',
     component: Card,
-    params: {number: 20},
-    props(route) {
-      return { number: route.params.number}
-    }
   },
 ];
 
